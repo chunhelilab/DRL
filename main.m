@@ -1,41 +1,42 @@
-%This is an implementation of the DRL(dimension reduction of landscape) method
+%This is an implementation of the DRL(dimension reduction of landscape)
+%method on MESC model.
 clear
 cycle_index=3000;  %% The number of random initial conditions to the ODEs to be solved
-par=[3.8 0.4 2.9 4 1];   %%the parameters of the ODE
-signal=[3,3,3];  %%Signal parameters
-d=0.04;  %%the diffusion coefficient 
-N=12; %%the dimension od the system
-tic() 
+par=[3.8 0.4 2.9 4 1];   %% The parameters of the ODE
+signal=[3,3,3];  %% Signal
+d=0.04;  %% The diffusion coefficient 
+N=12; %% The dimension of the system
+tic() %% Time
 %% Solve the ODEs, calculate the paths and actions;
 [xx,sigma,n,ycell,action]=Solver(cycle_index,par,signal,d);
 
-index=size(n,1);  %%%the number of stable states
-alpha=zeros(index,1);  %%the weight of stable states
-sigma0=cell(index,1);  %%the covariance of the Gaussian density function
-mu=zeros(index,N);  %%the mean value of the Gaussian density function
+index=size(n,1);  %% The number of the stable states
+alpha=zeros(index,1);  %% The weight of the stable states
+sigma0=cell(index,1);  %% The covariance of the Gaussian density function
+mu=zeros(index,N);  %% The mean value of the Gaussian density function
 
 for i=1:index
-   %expectation of each stable state
+   %The mean value of each stable state
    mu(i,:)=xx(n(i,1),:); 
-   %covariance of each stable state
+   %The covariance of each stable state
    sigma0{i}=reshape(sigma(n(i,1),:),N,N)';  
-   %weight of each stable state
+   %The weight of each stable state
    alpha(i)=n(i,2)/sum(n(:,2)); 
 end
 
 %% DRL
-%calculated the expectation
+%Calculate the mean value 
 Mu=0;
 for i=1:index
     Mu=Mu+alpha(i)*mu(i,:);
 end
-%calculated the covariance
+%Calculate the covariance
 Sigma=-Mu'*Mu; 
 for i=1:index
     Sigma=Sigma+alpha(i)*(sigma0{i}+mu(i,:)'*mu(i,:));
 end
 
-%%%Calculate the eigenvalues and eigenvectors of covariance
+%Calculate the eigenvalues and eigenvectors of the covariance
 [V,D] = eigs(Sigma,2);
 
 if sign(V(:,1)'*[1,1,1,1,1,1,1,1,1,1,1,1]')<0
@@ -45,7 +46,7 @@ if sign(V(:,2)'*[1,1,1,1,1,1,1,1,1,1,1,1]')<0
     V(:,2)=-V(:,2);
 end
 
-%%%Calculate the covariance and expectation after dimension reduction
+%%%Calculate the covariance and mean value after dimension reduction
 sigma0_pca=cell(index,1);
 mu_pca=zeros(index,2);
 for i=1:index
@@ -54,10 +55,10 @@ for i=1:index
 end
 
 %% plot the landscape
-y_max=[24,12]; %%range
+y_max=[24,12]; %% Range of the landscape
 y_min=[0,0];
-step=(y_max-y_min)/100; %%step
-[a1,a2]=meshgrid(y_min(1):step(1):y_max(1),y_min(2):step(2):y_max(2)); %%grid
+step=(y_max-y_min)/100; %% Length of the step
+[a1,a2]=meshgrid(y_min(1):step(1):y_max(1),y_min(2):step(2):y_max(2)); %% Grid
 [s1,s2]=size(a1);
 P=zeros(s1,s2);
 z=zeros(s1,s2);
@@ -66,14 +67,14 @@ for kk=1:index
     x_wen=mu_pca(kk,:);
     for i=1:s1
         for j=1:s2
-            z(i,j)=multivariate_normal_distribution([a1(i,j);a2(i,j)],x_wen',sig,2);  %%normal distribution
+            z(i,j)=multivariate_normal_distribution([a1(i,j);a2(i,j)],x_wen',sig,2);  %% Normal distribution
         end
     end
 
     P=P+z*alpha(kk);
 end
 P=P/sum(sum(P));
-surf(a1,a2,-log(max(P,10^-100)));   %%plot landscape
+surf(a1,a2,-log(max(P,10^-100)));   %% Plot landscape
 shading interp
 xlabel('PC1')
 ylabel('PC2')
@@ -86,7 +87,7 @@ for i=1:size(n,1)
 end
  hold on
 
-%plot the grid
+%Plot the grid
 for i=1:floor(size(a1,1)/4)
     plot3(a1(4*i-1,:),a2(4*i-1,:),-log(max(P(4*i-1,:),10^-100)),'Color',[0.4 0.4 0.4],'LineWidth',0.01);
 end
@@ -94,7 +95,7 @@ for i=1:floor(size(a1,2)/4)
     plot3(a1(:,4*i-1),a2(:,4*i-1),-log(max(P(:,4*i-1),10^-100)),'Color',[0.4 0.4 0.4],'LineWidth',0.01);
 end
 
-%%plot the paths
+%% Plot the paths
 %Calculate the paths after dimension reduction
 y12=V'*ycell{1,2};
 y21=V'*ycell{2,1};
