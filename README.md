@@ -1,6 +1,8 @@
 # DRL
 DRL (Dimension Reduction of Landscape) is an approach to  reduce the dimensionality of a high-dimensional landscape.
-This is a matlab implementation of DRL.
+This is a matlab implementation of DRL approach on a mouse embryonic stem cell (MESC) network. This network includes 26 interactions (regulations) and 15 components (12 genes and 3 signals).
+
+
 #####
 MESC.m is the ODEs of the MESC model;
 
@@ -12,4 +14,5 @@ calculate_sigma.m is used to calculate the covariance of one stable state.
 
 main.m is the main function which is uesd to calculate the density function of expression level of the system and use the DRL method to plot the landscape and transition paths of the system.
  
-The program runs about 3 minutes.
+
+Please run main.m and the program runs about 3 minutes.
