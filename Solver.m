@@ -9,7 +9,7 @@ params={};
 params.N=30; %The number of points in the minimum action path.
 params.TMax = 5; %The time range of the minimum action path.
 %Larger values can be more accurate, but can also lead to instabilities.
-params.Dimension = size(SS, 1); %The dimension of the system.
+params.Dimension = 12; %The dimension of the system.
 params.c = 1e10; %The remeshing parameter, c. Larger values give greater remeshing.
 params.MaxIter = 300; %The number of optimization steps to run between remeshing steps.
 params.K= 2; %The number of total remeshing steps to do;
@@ -26,7 +26,7 @@ xx=zeros(cycle_index,N);
 
 %%Solve odes from different initial values
 for i=1:cycle_index
-    x0=10*rand(1,N);
+    x0=5*rand(1,N);
     [t,x]=ode45(@(t,x)MESC(t,x,par,signal),[0,100],x0);
     newx=x(end,:);
     x=inf*ones(1,N);
