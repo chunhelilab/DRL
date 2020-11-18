@@ -1,9 +1,9 @@
 %This is an implementation of the DRL(dimension reduction of landscape) method
 clear
-cycle_index=3000;  %% the number of random initial conditions to the ODEs to be solved
+cycle_index=3000;  %% The number of random initial conditions to the ODEs to be solved
 par=[3.8 0.4 2.9 4 1];   %%the parameters of the ODE
 signal=[3,3,3];  %%Signal parameters
-d=0.4;  %%the diffusion coefficient 
+d=0.04;  %%the diffusion coefficient 
 N=12; %%the dimension od the system
 tic() 
 %% Solve the ODEs, calculate the paths and actions;
@@ -37,6 +37,7 @@ end
 
 %%%Calculate the eigenvalues and eigenvectors of covariance
 [V,D] = eigs(Sigma,2);
+
 if sign(V(:,1)'*[1,1,1,1,1,1,1,1,1,1,1,1]')<0
     V(:,1)=-V(:,1);
 end
@@ -71,12 +72,13 @@ for kk=1:index
 
     P=P+z*alpha(kk);
 end
-surf(a1,a2,-log(max(P,10^-9)));   %%plot landscape
+P=P/sum(sum(P));
+surf(a1,a2,-log(max(P,10^-100)));   %%plot landscape
 shading interp
 xlabel('PC1')
 ylabel('PC2')
 zlabel('U')
-axis([0 22 0 11 0 25])
+axis([0 22 0 11 0 240])
 
 for i=1:size(n,1)
     A(i)=floor((mu_pca(i,1)-y_min(1))/step(1))+1;
@@ -86,10 +88,10 @@ end
 
 %plot the grid
 for i=1:floor(size(a1,1)/4)
-    plot3(a1(4*i-1,:),a2(4*i-1,:),-log(max(P(4*i-1,:),10^-9)),'Color',[0.4 0.4 0.4],'LineWidth',0.01);
+    plot3(a1(4*i-1,:),a2(4*i-1,:),-log(max(P(4*i-1,:),10^-100)),'Color',[0.4 0.4 0.4],'LineWidth',0.01);
 end
 for i=1:floor(size(a1,2)/4)
-    plot3(a1(:,4*i-1),a2(:,4*i-1),-log(max(P(:,4*i-1),10^-9)),'Color',[0.4 0.4 0.4],'LineWidth',0.01);
+    plot3(a1(:,4*i-1),a2(:,4*i-1),-log(max(P(:,4*i-1),10^-100)),'Color',[0.4 0.4 0.4],'LineWidth',0.01);
 end
 
 %%plot the paths
@@ -98,11 +100,11 @@ y12=V'*ycell{1,2};
 y21=V'*ycell{2,1};
 view([-25,75])
 hold on
-z3path=griddata(a1,a2,-log(max(P,10^-9)),y12(1,:),y12(2,:));
-plot3(y12(1,:),y12(2,:),z3path+0.5,'w','LineWidth',2);
+z3path=griddata(a1,a2,-log(max(P,10^-100)),y12(1,:),y12(2,:));
+plot3(y12(1,:),y12(2,:),z3path+3,'w','LineWidth',2);
 
-z3path=griddata(a1,a2,-log(max(P,10^-9)),y21(1,:),y21(2,:));
-plot3(y21(1,:),y21(2,:),z3path+0.5,'Color',[0.85,0.43,0.83],'LineWidth',2);
+z3path=griddata(a1,a2,-log(max(P,10^-100)),y21(1,:),y21(2,:));
+plot3(y21(1,:),y21(2,:),z3path+3,'Color',[0.85,0.43,0.83],'LineWidth',2);
 
 view([-25 75])
 set(gcf,'outerposition', [100 100 800 650]);
