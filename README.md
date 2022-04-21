@@ -1,5 +1,5 @@
 # DRL
-DRL (Dimension Reduction of Landscape) is an approach to  reduce the dimensionality of a high-dimensional landscape.
+DRL (Dimension Reduction of Landscape) is an approach to reduce the dimensionality of a high-dimensional landscape (Xin Kang and Chunhe Li*,  A dimension reduction approach for energy landscape: Identifying intermediate states in EMT-metastasis network. Advanced Science, 8: 2003133 (2021).).
 This is a matlab implementation of DRL approach on a mouse embryonic stem cell (MESC) network. This network includes 26 interactions (regulations) and 15 components (12 genes and 3 signals).
 
 
