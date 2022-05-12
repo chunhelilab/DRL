@@ -114,18 +114,6 @@ end
 %by Zhou et al. in 
 %Zhou X, Ren W, E W (2008) An adaptive minimum action method for the study
 %of rare events. J. Chem Phys 128:104111. 
-%It is to accompany the software suite with top level
-%"OptimalLeastActionControl_Top.". All license information in that file
-%pertains to this file as well. 
-%This is sparsely documented. A more thorough description of the method can
-%be found in the above paper. 
-%For use with Optimal Least Action Control, nothing in this code should be
-%altered or changed, unless a bug is found. 
-
-%Author: Daniel K. Wells 
-%Date: 11/11/2014
-%Ver 1.0
-%Email: dannykwells@gmail.com
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
